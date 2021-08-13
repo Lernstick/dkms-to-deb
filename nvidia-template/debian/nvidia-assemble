@@ -1,0 +1,50 @@
+#!/bin/bash
+# Script to link and attach signatures of nvidia kernel modules at runtime.
+# Port of https://github.com/NVIDIA/yum-packaging-precompiled-kmod/blob/main/dnf-kmod-nvidia.spec
+
+SOURCE_PATH=$1 # Path where the object files, signatures and linker can be found.
+DEST_PATH=$2 # Path where to copy the .ko files
+SIGN_FILE=$3 # path to sign-file binary to reattach the signatures.
+KERNEL_VERSION=$4
+
+mkdir -p ${DEST_PATH}
+
+unset LD_RUN_PATH
+unset LD_LIBRARY_PATH
+
+cd ${SOURCE_PATH}
+
+_LD="./ld.gold"
+STRIP="strip -g --strip-unneeded"
+
+${_LD} -z max-page-size=0x200000 -r \
+    -o nvidia.o \
+	nvidia/nv-interface.o \
+	nvidia/nv-kernel.o
+
+${STRIP} nvidia.o
+${_LD} -r -T ${SOURCE_PATH}/module.lds --build-id -o ${DEST_PATH}/nvidia.ko nvidia.o nvidia.mod.o
+rm nvidia.o
+
+${_LD} -r -T ${SOURCE_PATH}/module.lds --build-id -o ${DEST_PATH}/nvidia-uvm.ko nvidia-uvm/nvidia-uvm.o nvidia-uvm.mod.o
+
+${_LD} -z max-page-size=0x200000 -r \
+	-o nvidia-modeset.o \
+	nvidia-modeset/nv-modeset-interface.o \
+	nvidia-modeset/nv-modeset-kernel.o
+
+${STRIP}  nvidia-modeset.o
+${_LD} -r -T ${SOURCE_PATH}/module.lds --build-id -o ${DEST_PATH}/nvidia-modeset.ko nvidia-modeset.o nvidia-modeset.mod.o
+rm nvidia-modeset.o
+
+${_LD} -r -T ${SOURCE_PATH}/module.lds --build-id -o ${DEST_PATH}/nvidia-drm.ko nvidia-drm/nvidia-drm.o nvidia-drm.mod.o
+
+#Attach signatures
+for m in nvidia nvidia-uvm nvidia-modeset nvidia-drm; do
+    ${SIGN_FILE} -s \
+        ${SOURCE_PATH}/${m}.ko.sig \
+        sha256 dummy \
+        ${DEST_PATH}/${m}.ko
+done
+
+depmod -a -w ${KERNEL_VERSION}

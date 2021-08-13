@@ -1,0 +1,36 @@
+# Debian dkms packages that need binary packages.
+# Unfortunately not all names are standard and therefore we need todo the package generation our self.
+# 
+# ${SOMETHING} will be substituted
+kernel:
+  kbuild-version: "5.10" # Unfortunately the kbuild packages have a different name
+  version: "5.10.0-7"
+  arch: amd64
+  arch-cpu: "x86_64"
+
+# Template for debian package
+template-dir: /debian-template
+nvidia-template-dir: /nvidia-template
+
+# Output dir
+output-dir: "/packages"
+
+packages:
+  broadcom-sta-dkms:
+    dkms: broadcom-sta
+    result: broadcom-sta-modules
+  v4l2loopback-dkms:
+    dkms: v4l2loopback
+    result: v4l2loopback-modules
+  apple-bce-drv-dkms:
+    dkms: apple-bce 
+    result: apple-bce-drv-modules
+  macbook12-spi-driver-dkms:
+    dkms: applespi
+    result: macbook12-spi-driver-modules
+  virtualbox-dkms:
+    dkms: virtualbox
+    result: virtualbox-modules
+  nvidia-kernel-dkms:
+    dkms: nvidia-current
+    result: nvidia-kernel-${MODULE_VERSION}

@@ -1,0 +1,5 @@
+${PACKAGE_NAME}-${KERNEL_VERSION}-signed (1+${MODULE_VERSION}) stable; urgency=low
+
+  * Update to ${MODULE_NAME} ${MODULE_VERSION}
+
+ -- Lernstick Kernel Module Team <info@lernsitck.ch>  ${TIME_STAMP}

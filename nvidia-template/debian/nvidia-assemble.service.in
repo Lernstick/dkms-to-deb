@@ -1,0 +1,18 @@
+[Unit]
+Description=Service for linking and adding signature to nvidia driver in Live system.
+Before=live-config.service
+Before=nvidia-persistenced.service
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/nvidia-assemble-${MODULE_VERSION} \
+    "/usr/lib/nvidia/${MODULE_NAME}-${MODULE_VERSION}/${KERNEL_VERSION}" \
+    "/lib/modules/${KERNEL_VERSION}/extra" \
+    "/usr/lib/linux-kbuild-${KBUILD_VERSION}/scripts/sign-file" \
+    "${KERNEL_VERSION}"
+
+
+[Install]
+RequiredBy=basic.target

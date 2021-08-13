@@ -1,0 +1,27 @@
+#!/usr/bin/make -f
+SHELL := bash -e
+
+# This variables will be initialized by our script
+KBUILD_VERSION := ${KBUILD_VERSION}
+KERNEL_VERSION := ${KERNEL_VERSION}
+PACKAGE_NAME := ${PACKAGE_NAME}
+
+SIG_DIR := debian/signatures/$$(PACKAGE_NAME)-$$(KERNEL_VERSION)-unsigned
+
+
+%:
+	dh $$@
+
+
+override_dh_auto_install:
+	while read path; do \
+		install -m 022 -D /lib/modules/$$(KERNEL_VERSION)/$$$${path%.sig} debian/tmp/lib/modules/$$(KERNEL_VERSION)/$$$${path%.sig}; \
+		/usr/lib/linux-kbuild-$$(KBUILD_VERSION)/scripts/sign-file -s \
+			$$(SIG_DIR)/lib/modules/$$(KERNEL_VERSION)/$$$$path \
+			sha256 dummy \
+			debian/tmp/lib/modules/$$(KERNEL_VERSION)/$$$${path%.sig}; \
+	done < <(find $$(SIG_DIR)/lib/modules/$$(KERNEL_VERSION) -name '*.sig' -printf '%P\n')
+
+
+override_dh_install:
+	dh_install --sourcedir=debian/tmp .

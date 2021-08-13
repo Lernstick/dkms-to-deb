@@ -1,0 +1,23 @@
+Source: ${DEBIAN_PACKAGE}-bin
+Section: misc
+Priority: optional
+Maintainer: Lernstick Kernel Module Team <info@lernsitck.ch>
+Build-Depends: debhelper (>= 10), dkms, python3
+Standards-Version: 3.8.1
+
+Package: ${PACKAGE_NAME}-${KERNEL_VERSION}-unsigned
+Architecture: ${DEBIAN_BUILD_ARCH}
+Depends: $${misc:Depends}, linux-image-${KERNEL_VERSION}
+Provides: ${PACKAGE_NAME}
+Description: ${DEBIAN_PACKAGE} binary drivers for linux-image-${KERNEL_VERSION}
+ This package may not be public!
+ This package contains ${DEBIAN_PACKAGE} drivers for the ${KERNEL_VERSION} Linux kernel,
+ built from ${DEBIAN_PACKAGE} for the ${DEBIAN_BUILD_ARCH} architecture.
+
+
+Package: ${PACKAGE_NAME}-${KERNEL_VERSION}-signed-template
+Architecture: ${DEBIAN_BUILD_ARCH}
+Depends: $${misc:Depends},
+Description: ${DEBIAN_PACKAGE} binary drivers for linux-image-${KERNEL_VERSION}
+ This package contains template files for ${PACKAGE_NAME}-${KERNEL_VERSION}.
+ This is only needed for Secure Boot signing.

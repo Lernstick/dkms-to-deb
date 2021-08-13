@@ -1,0 +1,40 @@
+#!/usr/bin/make -f
+SHELL := bash -e
+
+# This variables will be initialized by our script
+KBUILD_VERSION := ${KBUILD_VERSION}
+KERNEL_VERSION := ${KERNEL_VERSION}
+PACKAGE_NAME := ${PACKAGE_NAME}
+MODULE_NAME := ${MODULE_NAME}
+MODULE_VERSION := ${MODULE_VERSION}
+
+
+SIG_DIR := debian/signatures/$$(PACKAGE_NAME)-$$(KERNEL_VERSION)-unsigned
+SRC_DIR := /usr/lib/nvidia/$$(MODULE_NAME)-$$(MODULE_VERSION)/$$(KERNEL_VERSION)
+
+%:
+	dh $$@ --with-systemd
+
+override_dh_auto_install:
+	install -d debian/tmp/$$(SRC_DIR)	
+	cp -r $$(SRC_DIR)/*  debian/tmp/$$(SRC_DIR)/
+	while read path; do \
+		install -m 022 -D $$(SIG_DIR)/$$(SRC_DIR)/$$$${path} debian/tmp/$$(SRC_DIR)/; \
+	done < <(find $$(SIG_DIR)/$$(SRC_DIR) -name '*.sig' -printf '%P\n')
+
+# Don't ship prelinked modules
+	find debian/tmp/$$(SRC_DIR) -name '*.ko' -delete
+
+# Copy linker
+	install -m 755 $$(SRC_DIR)/ld.gold debian/tmp/$$(SRC_DIR)/
+	chmod +x debian/tmp/$$(SRC_DIR)/ld.gold
+	install $$(SRC_DIR)/module.lds debian/tmp/$$(SRC_DIR)/
+
+# Copy assmble script and service
+	install -m 755 -D /usr/sbin/nvidia-assemble-$$(MODULE_VERSION) debian/tmp/usr/sbin/nvidia-assemble-$$(MODULE_VERSION)
+	install -m 664 -D /lib/systemd/system/nvidia-assemble-$$(MODULE_VERSION).service debian/tmp/lib/systemd/system/nvidia-assemble-$$(MODULE_VERSION).service
+
+# Install
+override_dh_install:
+	dh_install --sourcedir=debian/tmp .
+	dh_installsystemd nvidia-assemble-$$(MODULE_VERSION).service

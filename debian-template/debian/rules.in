@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+PACKAGE_PREFIX=${PACKAGE_NAME}-${KERNEL_VERSION}
+
+%:
+	dh $$@
+
+
+override_dh_auto_install:
+	dh_auto_install --destdir=debian/$$(PACKAGE_PREFIX)-unsigned -- VERSION=${MODULE_VERSION} NAME=${MODULE_NAME} KVER=${KERNEL_VERSION} KARCH=${KERNEL_ARCH_CPU}
+	./debian/signing-template.py $$(PACKAGE_PREFIX)
