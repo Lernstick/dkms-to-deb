@@ -10,6 +10,7 @@ import subprocess
 import yaml
 import shutil
 import glob
+import logging
 from tempfile import TemporaryDirectory
 from collections import namedtuple
 from string import Template
@@ -17,8 +18,10 @@ from datetime import datetime
 from email import utils
 import os
 
-Config = namedtuple("Config", ["k_ver", "k_arch","k_arch_cpu", "kbuild_version", "template_dir", "nvidia_template_dir", "output_dir", "packages"])
-Package = namedtuple("Package", ["debian_name", "dkms_name", "result_name"])
+logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
+
+Config = namedtuple("Config", ["k_ver", "k_arch","k_arch_cpu", "kbuild_version", "local_repo", "output_dir", "packages"])
+Package = namedtuple("Package", ["debian_name", "dkms_name", "result_name", "template_dir"])
 
 
 def parse_config():
@@ -31,42 +34,48 @@ def parse_config():
     for debian_name in config["packages"].keys():
         packages.append(Package(debian_name=debian_name, 
             dkms_name=config["packages"][debian_name]["dkms"], 
-            result_name=config["packages"][debian_name]["result"]))
-    return Config(k_ver=config["kernel"]["version"], 
-            k_arch=config["kernel"]["arch"], 
-            k_arch_cpu=config["kernel"]["arch-cpu"], 
-            kbuild_version=config["kernel"]["kbuild-version"], 
-            template_dir=config["template-dir"], 
-            nvidia_template_dir=config["nvidia-template-dir"],
+            result_name=config["packages"][debian_name]["result"],
+            template_dir=config["packages"][debian_name]["template-dir"])
+            )
+    return Config(k_ver=config["kernel"]["version"],
+            k_arch=config["kernel"]["arch"],
+            k_arch_cpu=config["kernel"]["arch-cpu"],
+            kbuild_version=config["kernel"]["kbuild-version"],
             output_dir=config["output-dir"], 
+            local_repo=config["local-repo"],
             packages=packages)
 
 def install_kernel(config):
     p = subprocess.run(["apt-get", "update"])
+    if p.returncode != 0:
+        raise Exception("Package update failed")
     p = subprocess.run(["apt-get", "upgrade", "-y"])
+    if p.returncode != 0:
+        raise Exception("Package upgrade failed")
     p = subprocess.run(["apt-get", "install","--no-install-recommends", "-y", f'linux-headers-{config.k_ver}-{config.k_arch}'])
-    if (p.returncode != 0):
+    if p.returncode != 0:
         raise Exception("Kernel installation failed")
 
-def install_package(package):
+def install_package(package: str):
     p = subprocess.run(["apt-get", "install", "--no-install-recommends", "-y", package])
-    if (p.returncode != 0):
+    if p.returncode != 0:
         raise Exception(f"Installation of {package} failed")
 
-def dkms_get_version(package):
+def dkms_get_version(package: Package):
     p = subprocess.run(["dkms", "status", package.dkms_name], capture_output=True)
-    
+    if p.returncode != 0:
+        raise Exception("Running dkms status failed")
     values = p.stdout.decode().rstrip('\n').replace(": ", ", ").split(", ")
     if len(values) != 5:
         raise Exception("Package is not correctly installed")
     return values[1]
 
 
-def create_dkms_tarball(config, package, dkms_version, tmp_dir):
+def create_dkms_tarball(config: Config, package: Package, dkms_version, tmp_dir):
     kernel_name = f"{config.k_ver}-{config.k_arch}"
     archive = f"{tmp_dir}/{package.dkms_name}-{dkms_version}.dkms.tar.gz"
     p = subprocess.run(["dkms", "mktarball", "-m", package.dkms_name, "-v", dkms_version, "-k", kernel_name, "--archive",  archive])
-    if (p.returncode != 0):
+    if p.returncode != 0:
         raise Exception("Creation of tarball failed")
 
 def subst_variables(config, package, dkms_version, tmp_dir):
@@ -87,7 +96,7 @@ def subst_variables(config, package, dkms_version, tmp_dir):
         name, ext = os.path.splitext(debian_file)
         if os.path.isdir(debian_file) or ext != ".in":
             continue
-        print(debian_file)
+        logging.debug("Substitute variables in: %s", debian_file)
         with open(debian_file, 'r') as f:
             subst = Template(f.read())
         os.remove(debian_file)
@@ -96,23 +105,24 @@ def subst_variables(config, package, dkms_version, tmp_dir):
             f.write(out)
 
 def build_package(dir):
+    logging.info("Building package")
     p = subprocess.run(["dpkg-buildpackage", "-uc", "-us"], cwd=dir)
+    if p.returncode != 0:
+        raise Exception("Building the package failed")
 
 
-def create_debian_package(config, package, dkms_version):
+def create_debian_package(config: Config, package: Package, dkms_version):
+    logging.info("Build package for: %s", package.debian_name)
     with TemporaryDirectory(prefix="dkms") as tmp_dir:
         content = os.path.join(tmp_dir, "content")
-        print("Copy template")
-        if "nvidia" in package.debian_name:
-            shutil.copytree(config.nvidia_template_dir, content)
-        else:
-            shutil.copytree(config.template_dir, content)
-        print("Subst vars")
+        logging.debug("Copy template: %s", package.template_dir)
+        shutil.copytree(package.template_dir, content)
+        logging.debug("Subst vars")
         subst_variables(config, package, dkms_version, content)
-        print("Create Tarball")
+        logging.debug("Create Tarball")
         create_dkms_tarball(config, package, dkms_version, content)
         build_package(content)
-        print("Remove build dir")
+        logging.debug("Remove build dir")
         shutil.rmtree(content)
         for f in os.listdir(tmp_dir):
             f_src = os.path.join(tmp_dir, f)
@@ -125,16 +135,19 @@ def create_packages(config):
         dkms_version = dkms_get_version(package)
         create_debian_package(config, package, dkms_version)
 
+def setup_local_repo(config):
+    if not config.local_repo:
+        return
+
 def main():
     try:
         config = parse_config()
+        setup_local_repo(config)
         install_kernel(config)
         create_packages(config)
-        pass
     except Exception as e:
-        print("ERROR", e)
+        logging.exception(e)
         exit(1)
-        pass
 
 
 if __name__ == "__main__":

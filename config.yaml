@@ -3,14 +3,13 @@
 # 
 # ${SOMETHING} will be substituted
 kernel:
-  kbuild-version: "5.10" # Unfortunately the kbuild packages have a different name
-  version: "5.10.0-7"
+  kbuild-version: "5.18" # Unfortunately the kbuild packages have a different name
+  version: "5.18.0-0.bpo.1"
   arch: amd64
   arch-cpu: "x86_64"
 
-# Template for debian package
-template-dir: /debian-template
-nvidia-template-dir: /nvidia-template
+# Set to path to enable local package repository
+local-repo: false
 
 # Output dir
 output-dir: "/packages"
@@ -19,18 +18,20 @@ packages:
   broadcom-sta-dkms:
     dkms: broadcom-sta
     result: broadcom-sta-modules
+    template-dir: /debian-template
   v4l2loopback-dkms:
     dkms: v4l2loopback
     result: v4l2loopback-modules
+    template-dir: /debian-template
   apple-bce-drv-dkms:
     dkms: apple-bce 
     result: apple-bce-drv-modules
+    template-dir: /debian-template
   macbook12-spi-driver-dkms:
     dkms: applespi
     result: macbook12-spi-driver-modules
-  virtualbox-dkms:
-    dkms: virtualbox
-    result: virtualbox-modules
+    template-dir: /debian-template
   nvidia-kernel-dkms:
     dkms: nvidia-current
     result: nvidia-kernel-${MODULE_VERSION}
+    template-dir: /nvidia-template
