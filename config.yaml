@@ -18,7 +18,7 @@ packages:
   broadcom-sta-dkms:
     dkms: broadcom-sta
     result: broadcom-sta-modules
-    template-dir: /debian-template
+    template-dir: /broadcom-sta-template
   v4l2loopback-dkms:
     dkms: v4l2loopback
     result: v4l2loopback-modules

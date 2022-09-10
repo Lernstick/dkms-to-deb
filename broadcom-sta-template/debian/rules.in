@@ -1,0 +1,16 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+PACKAGE_PREFIX=${PACKAGE_NAME}-${KERNEL_VERSION}
+
+%:
+	dh $$@
+
+
+override_dh_auto_install:
+	./build.sh ${MODULE_NAME} ${MODULE_VERSION} ${KERNEL_VERSION} $$(CURDIR)/debian/$$(PACKAGE_PREFIX)-unsigned
+	./debian/signing-template.py $$(PACKAGE_PREFIX)
+	install -m 755 -D debian/broadcom-sta-assemble debian/$$(PACKAGE_PREFIX)-unsigned/usr/sbin/broadcom-sta-assemble-${MODULE_VERSION}
+	install -m 664 -D debian/broadcom-sta-assemble.service debian/$$(PACKAGE_PREFIX)-unsigned/lib/systemd/system/broadcom-sta-assemble-${MODULE_VERSION}.service

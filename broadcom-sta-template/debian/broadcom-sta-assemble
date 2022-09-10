@@ -1,0 +1,35 @@
+#!/bin/bash
+# Script to link and attach signatures of Broadcom STA kernel modules at runtime.
+# Based on of https://github.com/NVIDIA/yum-packaging-precompiled-kmod/blob/main/dnf-kmod-nvidia.spec
+
+SOURCE_PATH=$1 # Path where the object files, signatures and linker can be found.
+DEST_PATH=$2 # Path where to copy the .ko files
+SIGN_FILE=$3 # path to sign-file binary to reattach the signatures.
+KERNEL_VERSION=$4
+
+mkdir -p ${DEST_PATH}
+
+unset LD_RUN_PATH
+unset LD_LIBRARY_PATH
+
+cd ${SOURCE_PATH}
+
+_LD="./ld.gold"
+STRIP="strip -g --strip-unneeded"
+
+
+${_LD} -r -o wl.o src/wl/sys/wl_cfg80211_hybrid.o src/wl/sys/wl_iw.o src/wl/sys/wl_linux.o src/shared/linux_osl.o
+${STRIP} wl.o
+
+${_LD} -r -T ${SOURCE_PATH}/module.lds --build-id -o ${DEST_PATH}/wl.ko wl.o wl.mod.o
+rm wl.o
+
+#Attach signatures
+for m in wl; do
+    ${SIGN_FILE} -s \
+        ${SOURCE_PATH}/${m}.ko.sig \
+        sha256 dummy \
+        ${DEST_PATH}/${m}.ko
+done
+
+depmod -a -w ${KERNEL_VERSION}

@@ -1,0 +1,17 @@
+[Unit]
+Description=Service for linking and adding signature to Broadcom STA driver in Live system.
+Before=live-config.service
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/broadcom-sta-assemble-${MODULE_VERSION} \
+    "/usr/lib/broadcom-sta/${MODULE_NAME}-${MODULE_VERSION}/${KERNEL_VERSION}" \
+    "/lib/modules/${KERNEL_VERSION}/extra" \
+    "/usr/lib/linux-kbuild-${KBUILD_VERSION}/scripts/sign-file" \
+    "${KERNEL_VERSION}"
+
+
+[Install]
+RequiredBy=basic.target
