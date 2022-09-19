@@ -25,8 +25,8 @@ ${STRIP} src/wl/sys/wl_iw.o
 ${STRIP} src/wl/sys/wl_linux.o
 ${STRIP} src/shared/linux_osl.o
 
-
-${_LD} -r -o wl.o src/wl/sys/wl_cfg80211_hybrid.o src/wl/sys/wl_iw.o src/wl/sys/wl_linux.o src/shared/linux_osl.o
+# wlc_hybrid.o_amd64 is directly provided in the source code of broadcom-sta
+${_LD} -r -o wl.o src/wl/sys/wl_cfg80211_hybrid.o src/wl/sys/wl_iw.o src/wl/sys/wl_linux.o src/shared/linux_osl.o lib/wlc_hybrid.o_amd64
 
 for m in ${MODULES}
 do
@@ -53,10 +53,12 @@ install -m 644 *.ko ${DEST_PATH}
 install wl.mod.o ${DEST_PATH}
 install -d ${DEST_PATH}/src/wl/sys
 install -d ${DEST_PATH}/src/shared
+install -d ${DEST_PATH}/lib
 install src/wl/sys/wl_cfg80211_hybrid.o ${DEST_PATH}/src/wl/sys
 install src/wl/sys/wl_iw.o ${DEST_PATH}/src/wl/sys
 install src/wl/sys/wl_linux.o ${DEST_PATH}/src/wl/sys
 install src/shared/linux_osl.o ${DEST_PATH}/src/shared
+install lib/wlc_hybrid.o_amd64 ${DEST_PATH}/lib
 
 # Copy linker and module.lds, we need the exact version to make this work.
 install -m 755 ${_LD} ${DEST_PATH}

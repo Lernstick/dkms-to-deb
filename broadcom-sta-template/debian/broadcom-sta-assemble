@@ -17,8 +17,8 @@ cd ${SOURCE_PATH}
 _LD="./ld.gold"
 STRIP="strip -g --strip-unneeded"
 
-
-${_LD} -r -o wl.o src/wl/sys/wl_cfg80211_hybrid.o src/wl/sys/wl_iw.o src/wl/sys/wl_linux.o src/shared/linux_osl.o
+# wlc_hybrid.o_amd64 is directly provided in the source code of broadcom-sta
+${_LD} -r -o wl.o src/wl/sys/wl_cfg80211_hybrid.o src/wl/sys/wl_iw.o src/wl/sys/wl_linux.o src/shared/linux_osl.o lib/wlc_hybrid.o_amd64
 ${STRIP} wl.o
 
 ${_LD} -r -T ${SOURCE_PATH}/module.lds --build-id -o ${DEST_PATH}/wl.ko wl.o wl.mod.o
