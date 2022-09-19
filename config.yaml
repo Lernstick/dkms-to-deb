@@ -4,12 +4,18 @@
 # ${SOMETHING} will be substituted
 kernel:
   kbuild-version: "5.18" # Unfortunately the kbuild packages have a different name
-  version: "5.18.0-0.bpo.1"
+  version: "5.18.0-0.deb11.4" # Version in the package name
+  package-version: "5.18.16-1~bpo11+lernstick.1" # Specify specific version of the package
   arch: amd64
   arch-cpu: "x86_64"
 
 # Set to path to enable local package repository
 local-repo: false
+
+
+# Set distribution for created Debian packages
+distribution: "lernstick-11"
+
 
 # Output dir
 output-dir: "/packages"

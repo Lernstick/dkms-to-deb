@@ -1,4 +1,4 @@
-${PACKAGE_NAME}-${KERNEL_VERSION}-signed (1+${MODULE_VERSION}) stable; urgency=low
+${PACKAGE_NAME}-${KERNEL_VERSION}-signed (1+${MODULE_VERSION}) ${DISTRIBUTION}; urgency=low
 
   * Update to ${MODULE_NAME} ${MODULE_VERSION}
 

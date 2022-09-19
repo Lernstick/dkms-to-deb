@@ -20,7 +20,7 @@ import os
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 
-Config = namedtuple("Config", ["k_ver", "k_arch","k_arch_cpu", "kbuild_version", "local_repo", "output_dir", "packages"])
+Config = namedtuple("Config", ["k_ver", "k_arch","k_arch_cpu", "kbuild_version", "package_version", "local_repo", "output_dir", "distribution", "packages"])
 Package = namedtuple("Package", ["debian_name", "dkms_name", "result_name", "template_dir"])
 
 
@@ -41,18 +41,29 @@ def parse_config():
             k_arch=config["kernel"]["arch"],
             k_arch_cpu=config["kernel"]["arch-cpu"],
             kbuild_version=config["kernel"]["kbuild-version"],
+            package_version=config["kernel"]["package-version"],
             output_dir=config["output-dir"], 
             local_repo=config["local-repo"],
+            distribution=config["distribution"],
             packages=packages)
 
-def install_kernel(config):
+def install_kernel(config: Config):
     p = subprocess.run(["apt-get", "update"])
     if p.returncode != 0:
         raise Exception("Package update failed")
     p = subprocess.run(["apt-get", "upgrade", "-y"])
     if p.returncode != 0:
         raise Exception("Package upgrade failed")
-    p = subprocess.run(["apt-get", "install","--no-install-recommends", "-y", f'linux-headers-{config.k_ver}-{config.k_arch}'])
+
+    header_arch_name = f'linux-headers-{config.k_ver}-{config.k_arch}'
+    header_common_name = f'linux-headers-{config.k_ver}-common'
+    kbuild_name = f'linux-kbuild-{config.kbuild_version}'
+    # Install exact version
+    if config.package_version:
+        header_arch_name = f'{header_arch_name}={config.package_version}'
+        header_common_name = f'{header_common_name}={config.package_version}'
+        kbuild_name = f'{kbuild_name}={config.package_version}'
+    p = subprocess.run(["apt-get", "install","--no-install-recommends", "-y", header_arch_name, header_common_name, kbuild_name])
     if p.returncode != 0:
         raise Exception("Kernel installation failed")
 
@@ -78,7 +89,7 @@ def create_dkms_tarball(config: Config, package: Package, dkms_version, tmp_dir)
     if p.returncode != 0:
         raise Exception("Creation of tarball failed")
 
-def subst_variables(config, package, dkms_version, tmp_dir):
+def subst_variables(config: Config, package: Package, dkms_version: str, tmp_dir):
     package_name = Template(package.result_name).substitute(MODULE_VERSION=dkms_version)
     values = {
         "DEBIAN_PACKAGE": package.debian_name, 
@@ -89,7 +100,8 @@ def subst_variables(config, package, dkms_version, tmp_dir):
         "KERNEL_VERSION": f'{config.k_ver}-{config.k_arch}',
         "KERNEL_ARCH_CPU": config.k_arch_cpu,
         "KBUILD_VERSION": config.kbuild_version,
-        "DEBIAN_BUILD_ARCH": config.k_arch
+        "DEBIAN_BUILD_ARCH": config.k_arch,
+        "DISTRIBUTION": config.distribution
         }
     debian_dir = os.path.join(tmp_dir, "debian")
     for debian_file in glob.glob(f"{debian_dir}/**", recursive=True):
