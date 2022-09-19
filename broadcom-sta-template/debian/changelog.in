@@ -1,4 +1,4 @@
-${DEBIAN_PACKAGE}-bin (${MODULE_VERSION}) stable; urgency=low
+${DEBIAN_PACKAGE}-bin (${MODULE_VERSION}) ${DISTRIBUTION}; urgency=low
 
   * Automatically packaged by DKMS.
 
