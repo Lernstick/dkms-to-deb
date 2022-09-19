@@ -1,11 +1,9 @@
-#!/bin/sh -x
+#!/bin/bash -x
 
 # Port of https://github.com/NVIDIA/yum-packaging-precompiled-kmod/blob/main/dnf-kmod-nvidia.spec
 STRIP="strip -g --strip-unneeded"
 _LD="/usr/bin/ld.gold"
 MODULES="nvidia nvidia-uvm nvidia-modeset nvidia-drm"
-# Debian applies some custom patches that we also have to apply.
-PATCHES="kernel-5.7.0-set-memory-array.patch use-kbuild-compiler.patch use-kbuild-flags.patch use-kbuild-gcc-plugins.patch conftest-verbose.patch cc_version_check-gcc5.patch nvidia-use-ARCH.o_binary.patch nvidia-modeset-use-ARCH.o_binary.patch conftest-prefer-arch-headers.patch"
 
 NAME=$1
 VERSION=$2
@@ -18,8 +16,10 @@ unset LD_LIBRARY_PATH
 tar zxvf "${NAME}-${VERSION}.dkms.tar.gz"
 cd dkms_source_tree
 
-# Apply all debian specifc patches
-for p in ${PATCHES}
+# Debian applies some custom patches that we also have to apply.
+# The list of patches are included in the dkms.conf file
+source <(grep "PATCH" dkms.conf)
+for p in ${PATCH[@]}
 do
     patch -p1 < patches/${p}
 done
