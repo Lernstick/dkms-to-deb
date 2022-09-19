@@ -41,3 +41,7 @@ packages:
     dkms: nvidia-current
     result: nvidia-kernel-${MODULE_VERSION}
     template-dir: /nvidia-template
+  nvidia-legacy-390xx-kernel-dkms:
+    dkms: nvidia-legacy-390xx
+    result: nvidia-legacy-390xx-kernel-${MODULE_VERSION}
+    template-dir: /nvidia-template
