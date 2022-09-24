@@ -6,6 +6,7 @@ SOURCE_PATH=$1 # Path where the object files, signatures and linker can be found
 DEST_PATH=$2 # Path where to copy the .ko files
 SIGN_FILE=$3 # path to sign-file binary to reattach the signatures.
 KERNEL_VERSION=$4
+MODULE_NAME=$5
 
 mkdir -p ${DEST_PATH}
 
@@ -45,6 +46,12 @@ for m in nvidia nvidia-uvm nvidia-modeset nvidia-drm; do
         ${SOURCE_PATH}/${m}.ko.sig \
         sha256 dummy \
         ${DEST_PATH}/${m}.ko
+
+    # Rename module if not current to avoid naming conflicts in depmod
+    if [ ${MODULE_NAME} != "nvidia-current" ]
+    then
+        mv ${DEST_PATH}/${m}.ko ${DEST_PATH}/${MODULE_NAME}${m/#nvidia}.ko
+    fi
 done
 
 depmod -a -w ${KERNEL_VERSION}

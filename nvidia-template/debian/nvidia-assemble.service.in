@@ -12,7 +12,8 @@ ExecStart=/usr/sbin/nvidia-assemble-${MODULE_VERSION} \
     "/usr/lib/nvidia/${MODULE_NAME}-${MODULE_VERSION}/${KERNEL_VERSION}" \
     "/lib/modules/${KERNEL_VERSION}/extra/${MODULE_NAME}-${MODULE_VERSION}" \
     "/usr/lib/linux-kbuild-${KBUILD_VERSION}/scripts/sign-file" \
-    "${KERNEL_VERSION}"
+    "${KERNEL_VERSION}" \
+    "${MODULE_NAME}"
 ExecStop=/usr/bin/rm -rf /lib/modules/${KERNEL_VERSION}/extra/${MODULE_NAME}-${MODULE_VERSION}
 
 [Install]
