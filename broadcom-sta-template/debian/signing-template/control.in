@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 10.1~),
  ${PACKAGE_NAME}-${KERNEL_VERSION}-unsigned (= ${MODULE_VERSION})
 
 Package: ${PACKAGE_NAME}-${KERNEL_VERSION}-signed
-Depends: linux-kbuild-${KBUILD_VERSION}, binutils
+Depends: linux-kbuild-${KBUILD_VERSION}, binutils, depmod-assemble
 Provides: ${PACKAGE_NAME}
 Architecture: ${DEBIAN_BUILD_ARCH}
 Built-Using: ${PACKAGE_NAME}-${KERNEL_VERSION} (= ${MODULE_VERSION})

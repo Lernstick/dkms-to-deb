@@ -54,8 +54,4 @@ for m in nvidia nvidia-uvm nvidia-modeset nvidia-drm; do
         ${SOURCE_PATH}/${m}.ko.sig \
         sha256 dummy \
         ${DEST_PATH}/${m_name}.ko
-
-    
 done
-
-depmod -a -w ${KERNEL_VERSION}

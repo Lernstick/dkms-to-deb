@@ -31,5 +31,3 @@ for m in wl; do
         sha256 dummy \
         ${DEST_PATH}/${m}.ko
 done
-
-depmod -a -w ${KERNEL_VERSION}

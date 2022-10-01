@@ -1,0 +1,12 @@
+Source: depmod-assemble
+Section: misc
+Priority: optional
+Maintainer: Lernstick Kernel Module Team <info@lernsitck.ch>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.7.3
+
+
+Package: depmod-assemble
+Architecture: all
+Depends: ${misc:Depends}
+Description: Runs depmod after kernel modules were assembled.

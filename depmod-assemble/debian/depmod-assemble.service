@@ -1,0 +1,13 @@
+[Unit]
+Description=Runs depmod after all the assemble services have run.
+Before=basic.target systemd-modules-load.service systemd-udevd.service
+Conflicts=shutdown.target
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/depmod -a -w
+
+[Install]
+RequiredBy=basic.target

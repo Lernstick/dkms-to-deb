@@ -1,6 +1,7 @@
 [Unit]
 Description=Service for linking and adding signature to Broadcom STA driver in Live system.
 Before=basic.target systemd-modules-load.service systemd-udevd.service
+Before=depmod-assemble.service
 Conflicts=shutdown.target
 DefaultDependencies=no
 
