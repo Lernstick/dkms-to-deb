@@ -23,11 +23,21 @@ ${_LD} -z max-page-size=0x200000 -r \
 	nvidia/nv-interface.o \
 	nvidia/nv-kernel.o
 
+
+# Add module name as prefix if the module is not the current one
+if [ ${MODULE_NAME} != "nvidia-current" ]
+then
+    m_prefix=${MODULE_NAME}
+else
+    m_prefix="nvidia"
+fi
+
+
 ${STRIP} nvidia.o
-${_LD} -r -T ${SOURCE_PATH}/module.lds --build-id -o ${DEST_PATH}/nvidia.ko nvidia.o nvidia.mod.o
+${_LD} -r -T ${SOURCE_PATH}/module.lds --build-id -o ${DEST_PATH}/${m_prefix}.ko nvidia.o nvidia.mod.o
 rm nvidia.o
 
-${_LD} -r -T ${SOURCE_PATH}/module.lds --build-id -o ${DEST_PATH}/nvidia-uvm.ko nvidia-uvm/nvidia-uvm.o nvidia-uvm.mod.o
+${_LD} -r -T ${SOURCE_PATH}/module.lds --build-id -o ${DEST_PATH}/${m_prefix}-uvm.ko nvidia-uvm/nvidia-uvm.o nvidia-uvm.mod.o
 
 ${_LD} -z max-page-size=0x200000 -r \
 	-o nvidia-modeset.o \
@@ -35,16 +45,15 @@ ${_LD} -z max-page-size=0x200000 -r \
 	nvidia-modeset/nv-modeset-kernel.o
 
 ${STRIP}  nvidia-modeset.o
-${_LD} -r -T ${SOURCE_PATH}/module.lds --build-id -o ${DEST_PATH}/nvidia-modeset.ko nvidia-modeset.o nvidia-modeset.mod.o
+${_LD} -r -T ${SOURCE_PATH}/module.lds --build-id -o ${DEST_PATH}/${m_prefix}-modeset.ko nvidia-modeset.o nvidia-modeset.mod.o
 rm nvidia-modeset.o
 
-${_LD} -r -T ${SOURCE_PATH}/module.lds --build-id -o ${DEST_PATH}/nvidia-drm.ko nvidia-drm/nvidia-drm.o nvidia-drm.mod.o
+${_LD} -r -T ${SOURCE_PATH}/module.lds --build-id -o ${DEST_PATH}/${m_prefix}-drm.ko nvidia-drm/nvidia-drm.o nvidia-drm.mod.o
 
 #Attach signatures
 for m in nvidia nvidia-uvm nvidia-modeset nvidia-drm; do
     if [ ${MODULE_NAME} != "nvidia-current" ]
     then
-        # Rename module if not current to avoid naming conflicts in depmod
         m_name=${MODULE_NAME}${m/#nvidia}
     else
         m_name=${m}
