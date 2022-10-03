@@ -24,14 +24,8 @@ ${_LD} -z max-page-size=0x200000 -r \
 	nvidia/nv-kernel.o
 
 
-# Add module name as prefix if the module is not the current one
-if [ ${MODULE_NAME} != "nvidia-current" ]
-then
-    m_prefix=${MODULE_NAME}
-else
-    m_prefix="nvidia"
-fi
-
+# Add module name as prefix
+m_prefix=${MODULE_NAME}
 
 ${STRIP} nvidia.o
 ${_LD} -r -T ${SOURCE_PATH}/module.lds --build-id -o ${DEST_PATH}/${m_prefix}.ko nvidia.o nvidia.mod.o
@@ -52,12 +46,7 @@ ${_LD} -r -T ${SOURCE_PATH}/module.lds --build-id -o ${DEST_PATH}/${m_prefix}-dr
 
 #Attach signatures
 for m in nvidia nvidia-uvm nvidia-modeset nvidia-drm; do
-    if [ ${MODULE_NAME} != "nvidia-current" ]
-    then
-        m_name=${MODULE_NAME}${m/#nvidia}
-    else
-        m_name=${m}
-    fi
+    m_name=${MODULE_NAME}${m/#nvidia}
 
     ${SIGN_FILE} -s \
         ${SOURCE_PATH}/${m}.ko.sig \

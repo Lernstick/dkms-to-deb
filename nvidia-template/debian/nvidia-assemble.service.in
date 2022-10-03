@@ -1,8 +1,9 @@
 [Unit]
 Description=Service for linking and adding signature to nvidia driver in Live system.
-Before=basic.target systemd-modules-load.service systemd-udevd.service
-Before=nvidia-persistenced.service lernstick-xserver-xorg.service
-Before=depmod-assemble.service
+Before=basic.target systemd-modules-load.service systemd-udevd.service depmod-assemble.service
+Before=nvidia-persistenced.service
+After=lernstick-xserver-xorg.service # NVIDIA_VERSION is set by this service
+ConditionEnvironment=NVIDIA_VERSION=${MODULE_NAME}
 Conflicts=shutdown.target
 DefaultDependencies=no
 
