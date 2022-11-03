@@ -29,6 +29,10 @@ packages:
     dkms: v4l2loopback
     result: v4l2loopback-modules
     template-dir: /debian-template
+  rtl88x2bu-dkms:
+    dkms: rtl88x2bu
+    result: rtl88x2bu-modules
+    template-dir: /debian-template
   apple-bce-drv-dkms:
     dkms: apple-bce 
     result: apple-bce-drv-modules
