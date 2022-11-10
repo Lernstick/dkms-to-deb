@@ -3,9 +3,9 @@
 # 
 # ${SOMETHING} will be substituted
 kernel:
-  kbuild-version: "5.18" # Unfortunately the kbuild packages have a different name
-  version: "5.18.0-0.deb11.4" # Version in the package name
-  package-version: "5.18.16-1~bpo11+lernstick.1" # Specify specific version of the package
+  kbuild-version: "5.19" # Unfortunately the kbuild packages have a different name
+  version: "5.19.0-0.deb11.2" # Version in the package name
+  package-version: "5.19.11-1~bpo11+lernstick.1" # Specify specific version of the package
   arch: amd64
   arch-cpu: "x86_64"
 
