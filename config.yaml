@@ -49,3 +49,7 @@ packages:
     dkms: nvidia-legacy-390xx
     result: nvidia-legacy-390xx-kernel-${MODULE_VERSION}
     template-dir: /nvidia-template
+  virtualbox-dkms:
+    dkms: virtualbox
+    result: virtualbox-modules
+    template-dir: /debian-template
