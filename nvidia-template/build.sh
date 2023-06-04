@@ -61,7 +61,16 @@ install -m 644 *.ko ${DEST_PATH}
 install nvidia.mod.o ${DEST_PATH}
 install -d ${DEST_PATH}/nvidia
 install nvidia/nv-interface.o ${DEST_PATH}/nvidia/
-install nvidia/nv-kernel-amd64.o_binary ${DEST_PATH}/nvidia/nv-kernel.o
+if [ -f nvidia/nv-kernel-amd64.o_binary ]
+then
+	install nvidia/nv-kernel-amd64.o_binary ${DEST_PATH}/nvidia/nv-kernel.o
+elif [ -f nvidia/nv-kernel.o ]
+then
+	install nvidia/nv-kernel.o ${DEST_PATH}/nvidia/nv-kernel.o
+else
+	echo "Did not find a version of nvidia/nv-kernel.o or nvidia/nv-kernel-amd64.o_binary"
+	exit 1
+fi
 
 # uvm
 install nvidia-uvm.mod.o ${DEST_PATH}

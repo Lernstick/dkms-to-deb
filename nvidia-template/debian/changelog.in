@@ -1,4 +1,4 @@
-${DEBIAN_PACKAGE}-bin (${MODULE_VERSION}.lernstick.3) ${DISTRIBUTION}; urgency=low
+${DEBIAN_PACKAGE}-bin (${MODULE_VERSION}.lernstick.4) ${DISTRIBUTION}; urgency=low
 
   * Automatically packaged by DKMS.
 
