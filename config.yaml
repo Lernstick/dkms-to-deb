@@ -3,9 +3,9 @@
 # 
 # ${SOMETHING} will be substituted
 kernel:
-  kbuild-version: "5.19" # Unfortunately the kbuild packages have a different name
-  version: "5.19.0-0.deb11.2" # Version in the package name
-  package-version: "5.19.11-1~bpo11+lernstick.1" # Specify specific version of the package
+  kbuild-version: "6.1" # Unfortunately the kbuild packages have a different name
+  version: "6.1.0-0.deb11.7" # Version in the package name
+  package-version: "6.1.20-2~bpo11+lernstick.1" # Specify specific version of the package
   arch: amd64
   arch-cpu: "x86_64"
 
@@ -32,14 +32,6 @@ packages:
   rtl88x2bu-dkms:
     dkms: rtl88x2bu
     result: rtl88x2bu-modules
-    template-dir: /debian-template
-  apple-bce-drv-dkms:
-    dkms: apple-bce 
-    result: apple-bce-drv-modules
-    template-dir: /debian-template
-  macbook12-spi-driver-dkms:
-    dkms: applespi
-    result: macbook12-spi-driver-modules
     template-dir: /debian-template
   nvidia-kernel-dkms:
     dkms: nvidia-current
