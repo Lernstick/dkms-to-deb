@@ -14,7 +14,7 @@ DESTDIR=$4
 unset LD_RUN_PATH
 unset LD_LIBRARY_PATH
 
-tar zxvf "${NAME}-${VERSION}.dkms.tar.gz"
+tar zxvf "${NAME}.dkms.tar.gz"
 cd dkms_source_tree
 
 make KVER=${KVER}

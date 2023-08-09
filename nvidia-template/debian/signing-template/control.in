@@ -4,11 +4,11 @@ Priority: optional
 Maintainer: Lernstick Kernel Module Team <info@lernsitck.ch>
 Standards-Version: 4.3.0
 Build-Depends: debhelper (>= 10.1~),
- ${PACKAGE_NAME}-${KERNEL_VERSION}-unsigned (= ${MODULE_VERSION}.lernstick.3)
+ ${PACKAGE_NAME}-${KERNEL_VERSION}-unsigned (= ${MODULE_VERSION}.lernstick.4)
 
 Package: ${PACKAGE_NAME}-${KERNEL_VERSION}-signed
 Depends: linux-kbuild-${KBUILD_VERSION}, binutils, depmod-assemble
 Provides: ${PACKAGE_NAME}
 Architecture: ${DEBIAN_BUILD_ARCH}
-Built-Using: ${PACKAGE_NAME}-${KERNEL_VERSION} (= ${MODULE_VERSION}.lernstick.3)
+Built-Using: ${PACKAGE_NAME}-${KERNEL_VERSION} (= ${MODULE_VERSION}.lernstick.4)
 Description: Singed version of ${DEBIAN_PACKAGE} as binary package.

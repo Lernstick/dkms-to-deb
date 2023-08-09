@@ -76,7 +76,7 @@ def dkms_get_version(package: Package):
     p = subprocess.run(["dkms", "status", package.dkms_name], capture_output=True)
     if p.returncode != 0:
         raise Exception("Running dkms status failed")
-    values = p.stdout.decode().rstrip('\n').replace(": ", ", ").split(", ")
+    values = p.stdout.decode().rstrip('\n').replace(": ", ", ").replace("/", ", ").split(", ")
     if len(values) != 5:
         raise Exception("Package is not correctly installed")
     return values[1]
@@ -84,7 +84,7 @@ def dkms_get_version(package: Package):
 
 def create_dkms_tarball(config: Config, package: Package, dkms_version, tmp_dir):
     kernel_name = f"{config.k_ver}-{config.k_arch}"
-    archive = f"{tmp_dir}/{package.dkms_name}-{dkms_version}.dkms.tar.gz"
+    archive = f"{tmp_dir}/{package.dkms_name}.dkms.tar.gz"
     p = subprocess.run(["dkms", "mktarball", "-m", package.dkms_name, "-v", dkms_version, "-k", kernel_name, "--archive",  archive])
     if p.returncode != 0:
         raise Exception("Creation of tarball failed")
@@ -95,9 +95,10 @@ def subst_variables(config: Config, package: Package, dkms_version: str, tmp_dir
         "DEBIAN_PACKAGE": package.debian_name, 
         "MODULE_NAME": package.dkms_name,
         "PACKAGE_NAME": package_name,
-        "MODULE_VERSION": dkms_version,
+        "MODULE_VERSION": f"{config.package_version.replace('-','+')}+{dkms_version}",
         "TIME_STAMP": utils.format_datetime(datetime.now()),
         "KERNEL_VERSION": f'{config.k_ver}-{config.k_arch}',
+        "KERNEL_PACKAGE_VERSION": config.package_version,
         "KERNEL_ARCH_CPU": config.k_arch_cpu,
         "KBUILD_VERSION": config.kbuild_version,
         "DEBIAN_BUILD_ARCH": config.k_arch,

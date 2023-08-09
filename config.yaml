@@ -3,9 +3,9 @@
 # 
 # ${SOMETHING} will be substituted
 kernel:
-  kbuild-version: "5.19" # Unfortunately the kbuild packages have a different name
-  version: "5.19.0-0.deb11.2" # Version in the package name
-  package-version: "5.19.11-1~bpo11+lernstick.1" # Specify specific version of the package
+  kbuild-version: "6.4.0-0.deb12.1" # Unfortunately the kbuild packages have a different name
+  version: "6.4.0-0.deb12.1" # Version in the package name
+  package-version: "6.4.4-1~bpo12+lernstick.1" # Specify specific version of the package
   arch: amd64
   arch-cpu: "x86_64"
 
@@ -14,7 +14,7 @@ local-repo: false
 
 
 # Set distribution for created Debian packages
-distribution: "lernstick-11"
+distribution: "lernstick-12"
 
 
 # Output dir
@@ -29,26 +29,18 @@ packages:
     dkms: v4l2loopback
     result: v4l2loopback-modules
     template-dir: /debian-template
-  rtl88x2bu-dkms:
-    dkms: rtl88x2bu
-    result: rtl88x2bu-modules
-    template-dir: /debian-template
-  apple-bce-drv-dkms:
-    dkms: apple-bce 
-    result: apple-bce-drv-modules
-    template-dir: /debian-template
-  macbook12-spi-driver-dkms:
-    dkms: applespi
-    result: macbook12-spi-driver-modules
-    template-dir: /debian-template
+#  rtl88x2bu-dkms:
+#    dkms: rtl88x2bu
+#    result: rtl88x2bu-modules
+#    template-dir: /debian-template
   nvidia-kernel-dkms:
     dkms: nvidia-current
     result: nvidia-kernel-${MODULE_VERSION}
     template-dir: /nvidia-template
-  nvidia-legacy-390xx-kernel-dkms:
-    dkms: nvidia-legacy-390xx
-    result: nvidia-legacy-390xx-kernel-${MODULE_VERSION}
-    template-dir: /nvidia-template
+#  nvidia-legacy-390xx-kernel-dkms:
+#    dkms: nvidia-legacy-390xx
+#    result: nvidia-legacy-390xx-kernel-${MODULE_VERSION}
+#    template-dir: /nvidia-template
   virtualbox-dkms:
     dkms: virtualbox
     result: virtualbox-modules

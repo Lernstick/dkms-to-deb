@@ -8,7 +8,7 @@ For configuration options look into `config.yaml`.
 * Docker
 
 ## Usage
-* Build docker container: `docker build -t dkms .`
+* Build docker container: `docker build -t dkms-12 .`
 * Run container: 
 
 ```bash
@@ -18,5 +18,5 @@ docker run \
     -v $(pwd)/debian-template:/debian-template \
     -v $(pwd)/broadcom-sta-template:/broadcom-sta-template \
     -v $(pwd)/nvidia-template:/nvidia-template \
-    --rm -it dkms
+    --rm -it dkms-12
 ```

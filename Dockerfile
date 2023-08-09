@@ -1,11 +1,13 @@
-FROM debian:bullseye
+FROM debian:bookworm
 
-RUN sed -i -e's/ main/ main contrib non-free/g' /etc/apt/sources.list
+RUN sed -i -e's/ main/ main contrib non-free non-free-firmware/g' /etc/apt/sources.list.d/debian.sources
 RUN apt update -y && apt upgrade -y
-RUN apt install -y dkms debhelper curl python3 python3-yaml
+RUN apt install -y dkms debhelper curl python3 python3-yaml apt-transport-https
 
-RUN curl https://raw.githubusercontent.com/imedias/lernstickAdvanced/debian11/config/archives/lernstick-11.list -o /etc/apt/sources.list.d/lernstick-11.list
-RUN curl https://raw.githubusercontent.com/imedias/lernstickAdvanced/debian11/config/archives/lernstick-11.key | apt-key add -
+RUN curl https://raw.githubusercontent.com/lernstick/lernstickAdvanced/debian12/config/archives/lernstick-12.list -o /etc/apt/sources.list.d/lernstick-12.list
+RUN curl https://raw.githubusercontent.com/lernstick/lernstickAdvanced/debian12/config/archives/lernstick-12.key -o /etc/apt/trusted.gpg.d/lernstick-12.asc
+
+# Add internal Repo here
 
 RUN apt update -y && apt upgrade -y
 
