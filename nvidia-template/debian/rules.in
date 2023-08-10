@@ -4,6 +4,8 @@
 #export DH_VERBOSE = 1
 
 PACKAGE_PREFIX=${PACKAGE_NAME}-${KERNEL_VERSION}
+SANITIZED_MODULE_VERSION := $$(shell echo -n ${MODULE_VERSION} | tr [~+] -)
+
 
 %:
 	dh $$@
@@ -13,4 +15,4 @@ override_dh_auto_install:
 	./build.sh ${MODULE_NAME} ${MODULE_VERSION} ${KERNEL_VERSION} $$(CURDIR)/debian/$$(PACKAGE_PREFIX)-unsigned
 	./debian/signing-template.py $$(PACKAGE_PREFIX)
 	install -m 755 -D debian/nvidia-assemble debian/$$(PACKAGE_PREFIX)-unsigned/usr/sbin/nvidia-assemble-${MODULE_VERSION}
-	install -m 664 -D debian/nvidia-assemble.service debian/$$(PACKAGE_PREFIX)-unsigned/lib/systemd/system/nvidia-assemble-${MODULE_VERSION}.service
+	install -m 664 -D debian/nvidia-assemble.service debian/$$(PACKAGE_PREFIX)-unsigned/lib/systemd/system/nvidia-assemble-$$(SANITIZED_MODULE_VERSION).service

@@ -7,6 +7,7 @@ KERNEL_VERSION := ${KERNEL_VERSION}
 PACKAGE_NAME := ${PACKAGE_NAME}
 MODULE_NAME := ${MODULE_NAME}
 MODULE_VERSION := ${MODULE_VERSION}
+SANITIZED_MODULE_VERSION := $$(shell echo -n ${MODULE_VERSION} | tr [~+] -)
 
 
 SIG_DIR := debian/signatures/$$(PACKAGE_NAME)-$$(KERNEL_VERSION)-unsigned
@@ -32,9 +33,9 @@ override_dh_auto_install:
 
 # Copy assmble script and service
 	install -m 755 -D /usr/sbin/broadcom-sta-assemble-$$(MODULE_VERSION) debian/tmp/usr/sbin/broadcom-sta-assemble-$$(MODULE_VERSION)
-	install -m 664 -D /lib/systemd/system/broadcom-sta-assemble-$$(MODULE_VERSION).service debian/tmp/lib/systemd/system/broadcom-sta-assemble-$$(MODULE_VERSION).service
+	install -m 664 -D /lib/systemd/system/broadcom-sta-assemble-$$(SANITIZED_MODULE_VERSION).service debian/tmp/lib/systemd/system/broadcom-sta-assemble-$$(SANITIZED_MODULE_VERSION).service
 
 # Install
 override_dh_install:
 	dh_install --sourcedir=debian/tmp .
-	dh_installsystemd broadcom-sta-assemble-$$(MODULE_VERSION).service
+	dh_installsystemd broadcom-sta-assemble-$$(SANITIZED_MODULE_VERSION).service
