@@ -71,6 +71,12 @@ def install_package(package: str):
     p = subprocess.run(["apt-get", "install", "--no-install-recommends", "-y", package])
     if p.returncode != 0:
         raise Exception(f"Installation of {package} failed")
+    
+def get_package_version(package: str):
+    p = subprocess.run(["dpkg-query", "--showformat='${Version}'", "--show", package])
+    if p.returncode != 0:
+        raise Exception(f"Couldn't get package version of {package}")
+    return p.stdout.decode()
 
 def dkms_get_version(package: Package):
     p = subprocess.run(["dkms", "status", package.dkms_name], capture_output=True)
@@ -95,6 +101,7 @@ def subst_variables(config: Config, package: Package, dkms_version: str, tmp_dir
         "DEBIAN_PACKAGE": package.debian_name, 
         "MODULE_NAME": package.dkms_name,
         "PACKAGE_NAME": package_name,
+        "PACKAGE_VERSION": get_package_version(package),
         "MODULE_VERSION": f"{config.package_version.replace('-','+')}+{dkms_version}",
         "TIME_STAMP": utils.format_datetime(datetime.now()),
         "KERNEL_VERSION": f'{config.k_ver}-{config.k_arch}',
