@@ -7,8 +7,6 @@ RUN apt install -y dkms debhelper curl python3 python3-yaml apt-transport-https
 RUN curl https://raw.githubusercontent.com/lernstick/lernstickAdvanced/debian12/config/archives/lernstick-12.list -o /etc/apt/sources.list.d/lernstick-12.list
 RUN curl https://raw.githubusercontent.com/lernstick/lernstickAdvanced/debian12/config/archives/lernstick-12.key -o /etc/apt/trusted.gpg.d/lernstick-12.asc
 
-# Add internal Repo here
-
 RUN apt update -y && apt upgrade -y
 
 # Uninstall linux headers beacuse otherwise dkms will always also build for this version.

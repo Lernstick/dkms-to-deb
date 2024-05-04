@@ -9,6 +9,7 @@ For configuration options look into `config.yaml`.
 
 ## Usage
 * Build docker container: `docker build -t dkms-12 .`
+* Make sure that repo-config for the internal repositories is present
 * Run container: 
 
 ```bash
@@ -18,5 +19,6 @@ docker run \
     -v $(pwd)/debian-template:/debian-template \
     -v $(pwd)/broadcom-sta-template:/broadcom-sta-template \
     -v $(pwd)/nvidia-template:/nvidia-template \
+    -v $(pwd)/repo-config:/repo-config \
     --rm -it dkms-12
 ```
