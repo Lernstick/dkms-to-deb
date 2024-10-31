@@ -20,5 +20,6 @@ docker run \
     -v $(pwd)/broadcom-sta-template:/broadcom-sta-template \
     -v $(pwd)/nvidia-template:/nvidia-template \
     -v $(pwd)/repo-config:/repo-config \
+    --network="host" \
     --rm -it dkms-12
 ```
