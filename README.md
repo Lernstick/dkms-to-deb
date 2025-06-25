@@ -13,7 +13,7 @@ For configuration options look into `config.yaml`.
 * Run container: 
 
 ```bash
-docker run \
+sudo docker run \
     -v $(pwd)/packages:/packages \
     -v $(pwd)/config.yaml:/config.yaml \
     -v $(pwd)/debian-template:/debian-template \
