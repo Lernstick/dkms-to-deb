@@ -8,7 +8,7 @@ For configuration options look into `config.yaml`.
 * Docker
 
 ## Usage
-* Build docker container: `docker build -t dkms-12 .`
+* Build docker container: `docker build --network=host -t dkms-12 .`
 * Make sure that repo-config for the internal repositories is present
 * Run container: 
 
