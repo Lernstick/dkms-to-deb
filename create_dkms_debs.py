@@ -56,6 +56,15 @@ def install_kernel(config: Config):
     if p.returncode != 0:
         raise Exception("Package upgrade failed")
 
+    p = subprocess.run(["apt-get", "remove", "-y", "linux-image-*"])
+    if p.returncode != 0:
+        raise Exception("Removal of old kernels failed")
+
+    p = subprocess.run(["apt-get", "autoremove","-y"])
+    if p.returncode != 0:
+        raise Exception("Apt autoremove failes")
+
+
     header_arch_name = f'linux-headers-{config.kbuild_version}-{config.k_arch}'
     header_common_name = f'linux-headers-{config.kbuild_version}-common'
     kbuild_name = f'linux-kbuild-{config.kbuild_version}'
