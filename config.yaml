@@ -3,9 +3,9 @@
 # 
 # ${SOMETHING} will be substituted
 kernel:
-  kbuild-version: "6.6.13+bpo" # Unfortunately the kbuild packages have a different name
-  version: "6.6.13+bpo" # Version in the package name
-  package-version: "6.6.13-1~bpo12+lernstick.1" # Specify specific version of the package
+  version: "6.12.43+bpo" # Version in the package name
+  kbuild-version: "6.12.43+2" # Unfortunately the kbuild packages have a different name
+  package-version: "6.12.43-1~bpo12+lernstick.1" # Specify specific version of the package
   arch: amd64
   arch-cpu: "x86_64"
 
@@ -29,12 +29,12 @@ packages:
     dkms: v4l2loopback
     result: v4l2loopback-modules
     template-dir: /debian-template
-#  rtl88x2bu-dkms:
-#    dkms: rtl88x2bu
-#    result: rtl88x2bu-modules
-#    template-dir: /debian-template
+  rtl88x2bu-dkms:
+    dkms: rtl88x2bu
+    result: rtl88x2bu-modules
+    template-dir: /debian-template
   nvidia-kernel-dkms:
-    dkms: nvidia-current
+   dkms: nvidia-current
     result: nvidia-kernel-${MODULE_VERSION}
     template-dir: /nvidia-template
     deb-version: "1"

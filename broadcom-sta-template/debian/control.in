@@ -1,7 +1,7 @@
 Source: ${DEBIAN_PACKAGE}-bin
 Section: misc
 Priority: optional
-Maintainer: Lernstick Kernel Module Team <info@lernsitck.ch>
+Maintainer: Lernstick Kernel Module Team <info@lernstick.ch>
 Build-Depends: debhelper (>= 10), dkms, python3
 Standards-Version: 3.8.1
 

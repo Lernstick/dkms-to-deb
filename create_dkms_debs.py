@@ -18,7 +18,7 @@ from datetime import datetime
 from email import utils
 import os
 
-logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG, format='%(levelname)s - %(message)s')
 
 Config = namedtuple("Config", ["k_ver", "k_arch","k_arch_cpu", "kbuild_version", "package_version", "local_repo", "output_dir", "distribution", "packages"])
 Package = namedtuple("Package", ["debian_name", "dkms_name", "result_name", "template_dir", "deb_version"])
@@ -56,8 +56,8 @@ def install_kernel(config: Config):
     if p.returncode != 0:
         raise Exception("Package upgrade failed")
 
-    header_arch_name = f'linux-headers-{config.k_ver}-{config.k_arch}'
-    header_common_name = f'linux-headers-{config.k_ver}-common'
+    header_arch_name = f'linux-headers-{config.kbuild_version}-{config.k_arch}'
+    header_common_name = f'linux-headers-{config.kbuild_version}-common'
     kbuild_name = f'linux-kbuild-{config.kbuild_version}'
     # Install exact version
     if config.package_version:
@@ -90,7 +90,7 @@ def dkms_get_version(package: Package):
 
 
 def create_dkms_tarball(config: Config, package: Package, dkms_version, tmp_dir):
-    kernel_name = f"{config.k_ver}-{config.k_arch}"
+    kernel_name = f"{config.kbuild_version}-{config.k_arch}"
     archive = f"{tmp_dir}/{package.dkms_name}.dkms.tar.gz"
     p = subprocess.run(["dkms", "mktarball", "-m", package.dkms_name, "-v", dkms_version, "-k", kernel_name, "--archive",  archive])
     if p.returncode != 0:
