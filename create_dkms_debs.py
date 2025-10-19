@@ -20,7 +20,7 @@ import os
 
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s - %(message)s')
 
-Config = namedtuple("Config", ["k_ver", "k_arch","k_arch_cpu", "kbuild_version", "package_version", "local_repo", "output_dir", "distribution", "packages"])
+Config = namedtuple("Config", ["k_ver", "k_arch","k_arch_cpu", "package_version", "local_repo", "output_dir", "distribution", "packages"])
 Package = namedtuple("Package", ["debian_name", "dkms_name", "result_name", "template_dir", "deb_version"])
 
 
@@ -41,9 +41,8 @@ def parse_config():
     return Config(k_ver=config["kernel"]["version"],
             k_arch=config["kernel"]["arch"],
             k_arch_cpu=config["kernel"]["arch-cpu"],
-            kbuild_version=config["kernel"]["kbuild-version"],
             package_version=config["kernel"]["package-version"],
-            output_dir=config["output-dir"], 
+            output_dir=config["output-dir"],
             local_repo=config["local-repo"],
             distribution=config["distribution"],
             packages=packages)
@@ -65,9 +64,9 @@ def install_kernel(config: Config):
         raise Exception("Apt autoremove failes")
 
 
-    header_arch_name = f'linux-headers-{config.kbuild_version}-{config.k_arch}'
-    header_common_name = f'linux-headers-{config.kbuild_version}-common'
-    kbuild_name = f'linux-kbuild-{config.kbuild_version}'
+    header_arch_name = f'linux-headers-{config.k_ver}-{config.k_arch}'
+    header_common_name = f'linux-headers-{config.k_ver}-common'
+    kbuild_name = f'linux-kbuild-{config.k_ver}'
     # Install exact version
     if config.package_version:
         header_arch_name = f'{header_arch_name}={config.package_version}'
@@ -99,7 +98,7 @@ def dkms_get_version(package: Package):
 
 
 def create_dkms_tarball(config: Config, package: Package, dkms_version, tmp_dir):
-    kernel_name = f"{config.kbuild_version}-{config.k_arch}"
+    kernel_name = f"{config.k_ver}-{config.k_arch}"
     archive = f"{tmp_dir}/{package.dkms_name}.dkms.tar.gz"
     p = subprocess.run(["dkms", "mktarball", "-m", package.dkms_name, "-v", dkms_version, "-k", kernel_name, "--archive",  archive])
     if p.returncode != 0:
@@ -109,7 +108,7 @@ def subst_variables(config: Config, package: Package, dkms_version: str, tmp_dir
     package_name = Template(package.result_name).substitute(MODULE_VERSION=dkms_version)
     deb_version = f".lernstick.{package.deb_version}" if package.deb_version else "" 
     values = {
-        "DEBIAN_PACKAGE": package.debian_name, 
+        "DEBIAN_PACKAGE": package.debian_name,
         "MODULE_NAME": package.dkms_name,
         "PACKAGE_NAME": package_name,
         "PACKAGE_VERSION": get_package_version(package.debian_name),
@@ -118,7 +117,7 @@ def subst_variables(config: Config, package: Package, dkms_version: str, tmp_dir
         "KERNEL_VERSION": f'{config.k_ver}-{config.k_arch}',
         "KERNEL_PACKAGE_VERSION": config.package_version,
         "KERNEL_ARCH_CPU": config.k_arch_cpu,
-        "KBUILD_VERSION": config.kbuild_version,
+        "KBUILD_VERSION": config.k_ver,
         "DEBIAN_BUILD_ARCH": config.k_arch,
         "DISTRIBUTION": config.distribution,
         "DEB_VERSION": deb_version
