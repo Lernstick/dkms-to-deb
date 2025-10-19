@@ -10,5 +10,5 @@ PACKAGE_PREFIX=${PACKAGE_NAME}-${KERNEL_VERSION}
 
 
 override_dh_auto_install:
-	dh_auto_install --destdir=debian/$$(PACKAGE_PREFIX)-unsigned -- VERSION=${MODULE_VERSION} NAME=${MODULE_NAME} KVER=${KBUILD_VERSION}-${DEBIAN_BUILD_ARCH} KARCH=${KERNEL_ARCH_CPU}
+	dh_auto_install --destdir=debian/$$(PACKAGE_PREFIX)-unsigned -- VERSION=${MODULE_VERSION} NAME=${MODULE_NAME} KVER=${KERNEL_VERSION} KARCH=${KERNEL_ARCH_CPU}
 	./debian/signing-template.py $$(PACKAGE_PREFIX)
