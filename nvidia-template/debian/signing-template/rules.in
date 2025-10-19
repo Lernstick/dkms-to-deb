@@ -20,7 +20,7 @@ override_dh_auto_install:
 	install -d debian/tmp/$$(SRC_DIR)	
 	cp -r $$(SRC_DIR)/*  debian/tmp/$$(SRC_DIR)/
 	while read path; do \
-		install -m 022 -D $$(SIG_DIR)/$$(SRC_DIR)/$$$${path} debian/tmp/$$(SRC_DIR)/; \
+		install -m 644 -D $$(SIG_DIR)/$$(SRC_DIR)/$$$${path} debian/tmp/$$(SRC_DIR)/; \
 	done < <(find $$(SIG_DIR)/$$(SRC_DIR) -name '*.sig' -printf '%P\n')
 
 # Don't ship prelinked modules

@@ -15,7 +15,7 @@ SIG_DIR := debian/signatures/$$(PACKAGE_NAME)-$$(KERNEL_VERSION)-unsigned
 
 override_dh_auto_install:
 	while read path; do \
-		install -m 022 -D /lib/modules/$$(KERNEL_VERSION)/$$$${path%.sig} debian/tmp/lib/modules/$$(KERNEL_VERSION)/$$$${path%.sig}; \
+		install -m 644 -D /lib/modules/$$(KERNEL_VERSION)/$$$${path%.sig} debian/tmp/lib/modules/$$(KERNEL_VERSION)/$$$${path%.sig}; \
 		/usr/lib/linux-kbuild-$$(KBUILD_VERSION)/scripts/sign-file -s \
 			$$(SIG_DIR)/lib/modules/$$(KERNEL_VERSION)/$$$$path \
 			sha256 dummy \
