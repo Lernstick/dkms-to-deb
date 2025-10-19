@@ -4,7 +4,7 @@
 # ${SOMETHING} will be substituted
 kernel:
   version: "6.16.3+deb13" # Kernel version used for all package names
-  package-version: "6.12.43-1~bpo12+lernstick.1" # Specify specific version of the package
+  package-version: "6.16.3-1~bpo13+lernstick.1" # Specify specific version of the package
   arch: amd64
   arch-cpu: "x86_64"
 
@@ -13,7 +13,7 @@ local-repo: "/repo-config"
 
 
 # Set distribution for created Debian packages
-distribution: "lernstick-12"
+distribution: "lernstick-13"
 
 
 # Output dir
@@ -24,17 +24,17 @@ packages:
     dkms: broadcom-sta
     result: broadcom-sta-modules
     template-dir: /broadcom-sta-template
-    # target: lernstick-13-staging  # Optional: Debian target for apt install -t
   v4l2loopback-dkms:
     dkms: v4l2loopback
     result: v4l2loopback-modules
     template-dir: /debian-template
+    target: lernstick-13-backports-staging
   rtl88x2bu-dkms:
     dkms: rtl88x2bu
     result: rtl88x2bu-modules
     template-dir: /debian-template
   nvidia-kernel-dkms:
-   dkms: nvidia-current
+    dkms: nvidia-current
     result: nvidia-kernel-${MODULE_VERSION}
     template-dir: /nvidia-template
     deb-version: "1"
@@ -46,3 +46,4 @@ packages:
     dkms: virtualbox
     result: virtualbox-modules
     template-dir: /debian-template
+    target: lernstick-13-backports-staging
