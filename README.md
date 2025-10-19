@@ -8,7 +8,7 @@ For configuration options look into `config.yaml`.
 * Docker
 
 ## Usage
-* Build docker container: `docker build --network=host -t dkms-12 .`
+* Build docker container: `docker build --network=host -t dkms-13 .`
 * Make sure that repo-config for the internal repositories is present
 * Run container: 
 
@@ -21,5 +21,5 @@ sudo docker run \
     -v $(pwd)/nvidia-template:/nvidia-template \
     -v $(pwd)/repo-config:/repo-config \
     --network="host" \
-    --rm -it dkms-12
+    --rm -it dkms-13
 ```

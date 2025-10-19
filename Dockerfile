@@ -1,9 +1,9 @@
-FROM debian:bookworm
+FROM debian:trixie
 
 RUN sed -i -e's/ main/ main contrib non-free non-free-firmware/g' /etc/apt/sources.list.d/debian.sources
 RUN apt update -y && apt upgrade -y && apt install -y curl apt-transport-https
-RUN curl https://raw.githubusercontent.com/lernstick/lernstickAdvanced/debian12/config/archives/lernstick-12.list -o /etc/apt/sources.list.d/lernstick-12.list
-RUN curl https://raw.githubusercontent.com/lernstick/lernstickAdvanced/debian12/config/archives/lernstick-12.key -o /etc/apt/trusted.gpg.d/lernstick-12.asc
+RUN curl https://raw.githubusercontent.com/lernstick/lernstickAdvanced/debian13/config/archives/lernstick-13.list -o /etc/apt/sources.list.d/lernstick-12.list
+RUN curl https://raw.githubusercontent.com/lernstick/lernstickAdvanced/debian13/config/archives/lernstick-13.key -o /etc/apt/trusted.gpg.d/lernstick-12.asc
 
 RUN apt update -y && apt upgrade -y
 
