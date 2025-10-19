@@ -21,7 +21,7 @@ import os
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s - %(message)s')
 
 Config = namedtuple("Config", ["k_ver", "k_arch","k_arch_cpu", "package_version", "local_repo", "output_dir", "distribution", "packages"])
-Package = namedtuple("Package", ["debian_name", "dkms_name", "result_name", "template_dir", "deb_version"])
+Package = namedtuple("Package", ["debian_name", "dkms_name", "result_name", "template_dir", "deb_version", "target"])
 
 
 def parse_config():
@@ -32,11 +32,12 @@ def parse_config():
         config = yaml.safe_load(f)
     packages = list()
     for debian_name in config["packages"].keys():
-        packages.append(Package(debian_name=debian_name, 
-            dkms_name=config["packages"][debian_name]["dkms"], 
+        packages.append(Package(debian_name=debian_name,
+            dkms_name=config["packages"][debian_name]["dkms"],
             result_name=config["packages"][debian_name]["result"],
             template_dir=config["packages"][debian_name]["template-dir"],
-            deb_version=config["packages"][debian_name].get("deb-version"))
+            deb_version=config["packages"][debian_name].get("deb-version"),
+            target=config["packages"][debian_name].get("target"))
             )
     return Config(k_ver=config["kernel"]["version"],
             k_arch=config["kernel"]["arch"],
@@ -76,8 +77,12 @@ def install_kernel(config: Config):
     if p.returncode != 0:
         raise Exception("Kernel installation failed")
 
-def install_package(package: str):
-    p = subprocess.run(["apt-get", "install", "--no-install-recommends", "-y", package])
+def install_package(package: str, target: str = None):
+    cmd = ["apt-get", "install", "--no-install-recommends", "-y"]
+    if target:
+        cmd.extend(["-t", target])
+    cmd.append(package)
+    p = subprocess.run(cmd)
     if p.returncode != 0:
         raise Exception(f"Installation of {package} failed")
     
@@ -162,7 +167,7 @@ def create_debian_package(config: Config, package: Package, dkms_version):
 
 def create_packages(config):
     for package in config.packages:
-        install_package(package.debian_name)
+        install_package(package.debian_name, package.target)
         dkms_version = dkms_get_version(package)
         create_debian_package(config, package, dkms_version)
 

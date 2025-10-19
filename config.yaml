@@ -24,6 +24,7 @@ packages:
     dkms: broadcom-sta
     result: broadcom-sta-modules
     template-dir: /broadcom-sta-template
+    # target: lernstick-13-staging  # Optional: Debian target for apt install -t
   v4l2loopback-dkms:
     dkms: v4l2loopback
     result: v4l2loopback-modules
