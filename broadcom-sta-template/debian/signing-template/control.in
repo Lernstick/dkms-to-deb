@@ -1,7 +1,7 @@
 Source: ${PACKAGE_NAME}-${KERNEL_VERSION}-signed
 Section: admin
 Priority: optional
-Maintainer: Lernstick Kernel Module Team <info@lernsitck.ch>
+Maintainer: Lernstick Kernel Module Team <info@lernstick.ch>
 Standards-Version: 4.3.0
 Build-Depends: debhelper (>= 10.1~),
  ${PACKAGE_NAME}-${KERNEL_VERSION}-unsigned (= ${MODULE_VERSION}${DEB_VERSION})

@@ -2,5 +2,5 @@ ${DEBIAN_PACKAGE}-bin (${MODULE_VERSION}) ${DISTRIBUTION}; urgency=low
 
   * Automatically packaged by DKMS.
 
- -- Lernstick Kernel Module Team <info@lernsitck.ch>  ${TIME_STAMP}
+ -- Lernstick Kernel Module Team <info@lernstick.ch>  ${TIME_STAMP}
 

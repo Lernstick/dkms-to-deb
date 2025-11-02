@@ -1,7 +1,7 @@
 Source: depmod-assemble
 Section: misc
 Priority: optional
-Maintainer: Lernstick Kernel Module Team <info@lernsitck.ch>
+Maintainer: Lernstick Kernel Module Team <info@lernstick.ch>
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.7.3
 

@@ -2,4 +2,4 @@ ${PACKAGE_NAME}-${KERNEL_VERSION}-signed (1+${MODULE_VERSION}) ${DISTRIBUTION}; 
 
   * Update to ${MODULE_NAME} ${MODULE_VERSION}
 
- -- Lernstick Kernel Module Team <info@lernsitck.ch>  ${TIME_STAMP}
+ -- Lernstick Kernel Module Team <info@lernstick.ch>  ${TIME_STAMP}
