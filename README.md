@@ -5,12 +5,14 @@ The generated packages are compatible with [code-signing](https://salsa.debian.o
 For configuration options look into `config.yaml`.
 
 ## Needed tools
-* Docker
+* docker
+* sudo
 
 ## Usage
-* Build docker container: `docker build --network=host -t dkms-13 .`
 * Make sure that repo-config for the internal repositories is present
-* Run container: 
+* Build and run container: `./prepare-dkms-packages.sh`
+* Find resulting packages in folder `packages`
+* To debug you can use: 
 
 ```bash
 sudo docker run \
@@ -21,5 +23,9 @@ sudo docker run \
     -v $(pwd)/nvidia-template:/nvidia-template \
     -v $(pwd)/repo-config:/repo-config \
     --network="host" \
-    --rm -it dkms-13
+    --entrypoint /bin/bash \
+    -it dkms-13
+
+# then exit and run "docker start/attach a1b2c3d4"
+# "./create_dkms_debs.py config.yaml"
 ```
