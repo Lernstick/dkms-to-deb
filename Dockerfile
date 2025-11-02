@@ -8,7 +8,7 @@ RUN curl https://raw.githubusercontent.com/lernstick/lernstickAdvanced/debian13/
 RUN apt update -y && apt upgrade -y
 
 # Uninstall linux headers beacuse otherwise dkms will always also build for this version.
-RUN apt remove -y linux* && apt autoremove -y && apt-get install --no-install-recommends -y dkms debhelper python3 python3-yaml build-essential
+RUN apt remove -y linux* && apt autoremove -y && apt-get install --no-install-recommends -y binutils-gold build-essential debhelper dkms python3 python3-yaml 
 
 COPY "create_dkms_debs.py" .
 
