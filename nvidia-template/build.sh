@@ -1,4 +1,5 @@
 #!/bin/bash -x
+set -e
 
 # Port of https://github.com/NVIDIA/yum-packaging-precompiled-kmod/blob/main/dnf-kmod-nvidia.spec
 STRIP="strip -g --strip-unneeded"
