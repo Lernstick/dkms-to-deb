@@ -3,8 +3,8 @@
 #
 # ${SOMETHING} will be substituted
 kernel:
-  version: "6.16.3+deb13" # Kernel version used for all package names
-  package-version: "6.16.3-1~bpo13+lernstick.1" # Specify specific version of the package
+  version: "6.17.8+deb13" # Kernel version used for all package names
+  package-version: "6.17.8-1~bpo13+lernstick.1" # Specify specific version of the package
   arch: amd64
   arch-cpu: "x86_64"
 
