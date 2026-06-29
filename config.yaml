@@ -3,8 +3,8 @@
 #
 # ${SOMETHING} will be substituted
 kernel:
-  version: "6.17.8+deb13" # Kernel version used for all package names
-  package-version: "6.17.8-1~bpo13+lernstick.1" # Specify specific version of the package
+  version: "7.0.12+deb13" # Kernel version used for all package names
+  package-version: "7.0.12-2~bpo13+lernstick.1" # Specify specific version of the package
   arch: amd64
   arch-cpu: "x86_64"
 
@@ -24,6 +24,7 @@ packages:
     dkms: broadcom-sta
     result: broadcom-sta-modules
     template-dir: /broadcom-sta-template
+    target: lernstick-13-backports
   v4l2loopback-dkms:
     dkms: v4l2loopback
     result: v4l2loopback-modules
@@ -33,11 +34,19 @@ packages:
     dkms: rtl88x2bu
     result: rtl88x2bu-modules
     template-dir: /debian-template
+    # built and put into internal-repository
   nvidia-kernel-dkms:
     dkms: nvidia-current
     result: nvidia-kernel-${MODULE_VERSION}
     template-dir: /nvidia-template
     deb-version: "1"
+    target: lernstick-13-backports-staging
+  nvidia-open-kernel-dkms:
+    dkms: nvidia-open-gpu-kernel
+    result: nvidia-open-gpu-kernel-modules
+    template-dir: /debian-template
+    deb-version: "1"
+    target: lernstick-13-backports-staging
 #  nvidia-legacy-390xx-kernel-dkms:
 #    dkms: nvidia-legacy-390xx
 #    result: nvidia-legacy-390xx-kernel-${MODULE_VERSION}

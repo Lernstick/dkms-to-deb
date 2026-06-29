@@ -6,6 +6,14 @@ STRIP="strip -g --strip-unneeded"
 _LD="/usr/bin/ld.gold"
 MODULES="nvidia nvidia-uvm nvidia-modeset nvidia-drm"
 
+# add to fix "nvidia: loading module not compiled with retpoline compiler"
+KCFLAGS='-mindirect-branch=thunk-inline -mindirect-branch-register'
+CFLAGS='-mindirect-branch=thunk-inline -mindirect-branch-register'
+
+# try flags from NVIDIA/open-gpu-kernel-modules
+NV_VERBOSE=1
+DEBUG=1
+
 NAME=$1
 VERSION=$2
 KVER=$3
